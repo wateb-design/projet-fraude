@@ -1,7 +1,7 @@
 streamlit
-tensorflow==2.15.1
-scikit-learn
+tf-keras
 numpy
 matplotlib
 seaborn
 joblib
+scikit-learn
