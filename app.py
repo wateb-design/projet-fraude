@@ -1,19 +1,10 @@
 import streamlit as st
 import numpy as np
 import json
-import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
-import keras
+
 st.set_page_config(page_title="Détection de Fraude – CNN", page_icon="🏦", layout="wide")
-
-@st.cache_resource
-def load_model():
-    return keras.models.load_model("cnn_fraude.keras")
-
-@st.cache_resource
-def load_scaler():
-    return joblib.load("scaler.pkl")
 
 @st.cache_data
 def load_data():
@@ -28,8 +19,6 @@ def load_data():
     val_acc  = np.load("history_val_acc.npy")
     return metriques, cm, fpr, tpr, loss, val_loss, acc, val_acc
 
-model  = load_model()
-scaler = load_scaler()
 metriques, cm, fpr, tpr, loss, val_loss, acc, val_acc = load_data()
 
 st.title("🏦 Détection de Fraude Bancaire par CNN")
@@ -75,25 +64,3 @@ with c3:
     ax4.set_title("Accuracy")
     ax4.legend()
     st.pyplot(fig4)
-st.divider()
-
-st.header("🤖 Simulateur de Prédiction")
-feature_names = ["Time"]+[f"V{i}" for i in range(1,29)]+["Amount"]
-with st.form("form"):
-    cols = st.columns(5)
-    values = []
-    for i, fname in enumerate(feature_names):
-        val = cols[i%5].number_input(fname, value=0.0, format="%.4f")
-        values.append(val)
-    submitted = st.form_submit_button("🔍 Analyser")
-
-if submitted:
-    inp = np.array(values).reshape(1,-1)
-    inp = scaler.transform(inp)
-    inp = np.expand_dims(inp, axis=2)
-    proba = model.predict(inp)[0][0]
-    if proba > 0.5:
-        st.error(f"🚨 FRAUDE DÉTECTÉE — Probabilité : {proba:.2%}")
-    else:
-        st.success(f"✅ Transaction NORMALE — Probabilité : {proba:.2%}")
-    st.progress(float(proba))
