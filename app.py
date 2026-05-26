@@ -4,13 +4,12 @@ import json
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
-import tf_keras as tf
-
+import keras
 st.set_page_config(page_title="Détection de Fraude – CNN", page_icon="🏦", layout="wide")
 
 @st.cache_resource
 def load_model():
-    return tf.models.load_model("cnn_fraude.h5")
+    return keras.models.load_model("cnn_fraude.keras")
 
 @st.cache_resource
 def load_scaler():
