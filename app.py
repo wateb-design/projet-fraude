@@ -3,20 +3,24 @@ import numpy as np
 import json
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 st.set_page_config(page_title="Détection de Fraude – CNN", page_icon="🏦", layout="wide")
 
+# Chemin absolu vers les fichiers
+BASE = os.path.dirname(os.path.abspath(__file__))
+
 @st.cache_data
 def load_data():
-    with open("metriques.json") as f:
+    with open(os.path.join(BASE, "metriques.json")) as f:
         metriques = json.load(f)
-    cm       = np.load("confusion_matrix.npy")
-    fpr      = np.load("fpr.npy")
-    tpr      = np.load("tpr.npy")
-    loss     = np.load("history_loss.npy")
-    val_loss = np.load("history_val_loss.npy")
-    acc      = np.load("history_acc.npy")
-    val_acc  = np.load("history_val_acc.npy")
+    cm       = np.load(os.path.join(BASE, "confusion_matrix.npy"))
+    fpr      = np.load(os.path.join(BASE, "fpr.npy"))
+    tpr      = np.load(os.path.join(BASE, "tpr.npy"))
+    loss     = np.load(os.path.join(BASE, "history_loss.npy"))
+    val_loss = np.load(os.path.join(BASE, "history_val_loss.npy"))
+    acc      = np.load(os.path.join(BASE, "history_acc.npy"))
+    val_acc  = np.load(os.path.join(BASE, "history_val_acc.npy"))
     return metriques, cm, fpr, tpr, loss, val_loss, acc, val_acc
 
 metriques, cm, fpr, tpr, loss, val_loss, acc, val_acc = load_data()
